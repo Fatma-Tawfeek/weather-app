@@ -3,7 +3,6 @@ const cardContainer = document.getElementById("cards-container");
 
 /*** Weather API ***/
 async function getWeather(q) {
-    console.log(q);
     let response = await fetch(
         `https://api.weatherapi.com/v1/forecast.json?key=1d7fc078b74548de8c6163555240210&q=${q}&days=3`
     );
