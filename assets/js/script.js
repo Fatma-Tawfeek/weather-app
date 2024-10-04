@@ -1,21 +1,33 @@
 const searchInput = document.getElementById("search-input");
 const cardContainer = document.getElementById("cards-container");
+const searchForm = document.getElementById("search-form");
 
 /*** Weather API ***/
 async function getWeather(q) {
+    console.log(q);
     let response = await fetch(
         `https://api.weatherapi.com/v1/forecast.json?key=1d7fc078b74548de8c6163555240210&q=${q}&days=3`
     );
     let finalResponse = await response.json();
     displayWeather(finalResponse);
+    console.log(finalResponse);
 }
 
-/*** Default Weather ***/
-getWeather("Cairo");
+getWeather();
+
+/*** Search Button Listener ***/
+searchForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    if (searchInput.value.length > 2) {
+        getWeather(searchInput.value);
+    }
+});
 
 /*** Search Input Listener ***/
 searchInput.addEventListener("keyup", function () {
-    getWeather(searchInput.value);
+    if (searchInput.value.length > 2) {
+        getWeather(searchInput.value);
+    }
 });
 
 /** get current location weather */
@@ -27,8 +39,7 @@ navigator.geolocation.getCurrentPosition(function (position) {
 
 /*** Display Weather ***/
 function displayWeather(weather) {
-    if (weather.error == undefined) {
-        cardContainer.innerHTML = `
+    cardContainer.innerHTML = `
             <div class="col-12 col-md-4">
                 <div class="details-card rounded-4 overflow-hidden">
                     <div
@@ -55,7 +66,7 @@ function displayWeather(weather) {
                         }</p>
                         <div class="card-footer d-flex gap-3">
                             <p class="humidity"> <i class="fa-solid fa-xl fa-umbrella"></i> ${
-                                weather.forecast.forecastday[0].day.avghumidity
+                                weather.current.humidity
                             }%</p>
                             <p class="wind"> <i class="fa-solid fa-xl  fa-wind"></i> ${
                                 weather.forecast.forecastday[0].day.maxwind_kph
@@ -126,5 +137,4 @@ function displayWeather(weather) {
                 </div>
             </div>
             `;
-    }
 }
